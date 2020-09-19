@@ -1,1 +1,0 @@
-alert("I AM JS")

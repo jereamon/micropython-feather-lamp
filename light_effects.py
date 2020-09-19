@@ -71,149 +71,144 @@ class SideToSide:
             self.tracker += self.tracker_add_sub
 
 
-class Spiral:
-    def __init__(self, led_strips):
-        self.led_tracker = 16
-        self.led_add_sub = -1
-        self.current_strip = False
-        self.led_strips = led_strips
-
-        self.color = [NUMS[0], NUMS[100], NUMS[100]]
-        self.fade_speed = .001
-
-    def all_off(self):
-        for led_strip in self.led_strips:
-            led_strip.fill([0, 0, 0])
-            led_strip.write()
-
-    def cycle_lights(self):
-        self.all_off()
-        self.led_strips[self.current_strip][self.led_tracker] = self.color
-        self.led_strips[self.current_strip].write()
-        sleep(self.fade_speed)
-
-        if self.led_tracker + self.led_add_sub > 16:
-            self.led_add_sub *= -1
-        else:
-            if self.led_tracker + self.led_add_sub < 0:
-                self.current_strip = not self.current_strip
-                self.led_add_sub *= -1
-            self.led_tracker += self.led_add_sub
-
-
-# class FadeInHalf:
-#     def __init__(self, led_strips, colors):
+# class Spiral:
+#     def __init__(self, led_strips):
+#         self.led_tracker = 16
+#         self.led_add_sub = -1
+#         self.current_strip = False
 #         self.led_strips = led_strips
 
-#         self.incremental_colors = []
-#         self.set_incremental_colors(colors)
-        
-#     def set_incremental_colors(self, colors):
-#         self.incremental_colors = [[] for i in range(6)]
-#         if len(colors) < 2:
-#             self.incremental_colors = [[NUMS[colors[0][0]], NUMS[colors[0][1]], NUMS[colors[0][2]]]]
-#         elif len(colors) > 1:
-#             self.incremental_colors[0] = colors[0]
-#             self.incremental_colors[5] = colors[1]
-#             for i in range(1, 5):
-#                 for j in range(3):
-#                     cur_inc_color = NUMS[colors[0][j] + (((colors[1][j] - colors[0][j]) // 6) * i)]
-#                     self.incremental_colors[i].append(cur_inc_color)
+#         self.color = [NUMS[0], NUMS[100], NUMS[100]]
+#         self.fade_speed = .001
+
+#     def all_off(self):
+#         for led_strip in self.led_strips:
+#             led_strip.fill([0, 0, 0])
+#             led_strip.write()
 
 #     def cycle_lights(self):
-#         led_nums = [
-#             [16,],
-#             [15, 14, 13, 12, 11, 10, 9, 8],
-#             [7, 6, 5, 4, 3, 2, 1, 0]
-#         ]
-#         temp_inc = 0
-#         strip_selector = False
+#         self.all_off()
+#         self.led_strips[self.current_strip][self.led_tracker] = self.color
+#         self.led_strips[self.current_strip].write()
+#         sleep(self.fade_speed)
 
-#         for i in range(6):
-#             if i == 3:
-#                 strip_selector = not strip_selector
-#             if i > 2:
-#                 temp_inc = (i - 5) * -1
-#             else:
-#                 temp_inc = i
+#         if self.led_tracker + self.led_add_sub > 16:
+#             self.led_add_sub *= -1
+#         else:
+#             if self.led_tracker + self.led_add_sub < 0:
+#                 self.current_strip = not self.current_strip
+#                 self.led_add_sub *= -1
+#             self.led_tracker += self.led_add_sub
 
-#             for led_num in led_nums[temp_inc]:
-#                 self.led_strips[strip_selector][led_num] = self.incremental_colors[i]
-#             self.led_strips[strip_selector].write()
+
+class FadeInHalf:
+    def __init__(self, led_strips, colors):
+        self.led_strips = led_strips
+
+        self.incremental_colors = []
+        self.set_incremental_colors(colors)
+        
+    def set_incremental_colors(self, colors):
+        self.incremental_colors = [[] for i in range(6)]
+        if len(colors) < 2:
+            self.incremental_colors = [[NUMS[colors[0][0]], NUMS[colors[0][1]], NUMS[colors[0][2]]]]
+        elif len(colors) > 1:
+            self.incremental_colors[0] = colors[0]
+            self.incremental_colors[5] = colors[1]
+            for i in range(1, 5):
+                for j in range(3):
+                    cur_inc_color = NUMS[colors[0][j] + (((colors[1][j] - colors[0][j]) // 6) * i)]
+                    self.incremental_colors[i].append(cur_inc_color)
+
+    def cycle_lights(self):
+        led_nums = [
+            [16,],
+            [15, 14, 13, 12, 11, 10, 9, 8],
+            [7, 6, 5, 4, 3, 2, 1, 0]
+        ]
+        temp_inc = 0
+        strip_selector = False
+
+        for i in range(6):
+            if i == 3:
+                strip_selector = not strip_selector
+            if i > 2:
+                temp_inc = (i - 5) * -1
+            else:
+                temp_inc = i
+
+            for led_num in led_nums[temp_inc]:
+                self.led_strips[strip_selector][led_num] = self.incremental_colors[i]
+            self.led_strips[strip_selector].write()
 
 
 class FadeAlong:
-    def __init__(self):
+    def __init__(self, colors):
         self.led_strips = [led_strip, led_strip_2]
+        if len(colors) < 2:
+            self.colors = [colors[0], colors[0]]
+        elif len(colors) > 34:
+            self.colors = colors[:33]
+        else:
+            self.colors = colors
 
         self.incremental_colors = [[] for i in range(34)]
-        self.set_incremental_colors([[255, 0, 0], [0, 0, 255]])
+        self.set_incremental_colors(self.colors)
 
         self.cycle_increment = 0
 
     def set_incremental_colors(self, colors):
+        self.incremental_colors = [[] for i in range(34)]
         self.incremental_colors[0] = colors[0]
-        self.incremental_colors[33] = colors[1]
+        self.incremental_colors[33] = colors[-1]
+
+        color_increment = 0
+        multiplier_reset = 0
+        fade_distance = 34 // (len(colors) - 1)
 
         for i in range(1, 33):
+            if i > (34 // ((len(colors) - 1)) * (color_increment + 1)) and color_increment + 1 < len(colors) - 1:
+                # print("\nincrementing color_increment")
+                color_increment += 1
+                # print("color_increment now = {}".format(color_increment))
+                multiplier_reset = (34 // (len(colors) - 1)) * color_increment
+                # print("multiplier_reset = {}\n".format(multiplier_reset))
             for j in range(3):
-                cur_inc_color = NUMS[colors[0][j] + (((colors[1][j] - colors[0][j]) // 34) * i)]
-                self.incremental_colors[i].append(cur_inc_color)
+                color_difference = (colors[color_increment + 1][j] - colors[color_increment][j]) / fade_distance
+                new_color = NUMS[round(colors[color_increment][j] + (color_difference * (i - multiplier_reset)))]
 
-    def cycle_lights(self):
+                # cur_inc_color = NUMS[colors[color_increment][j] + (((colors[color_increment + 1][j] - colors[color_increment][j]) // 34) * i)]
+                # self.incremental_colors[i].append(cur_inc_color)
+                self.incremental_colors[i].append(new_color)
+
+        # print("\n\nincremental_colors: {}\n\n".format(self.incremental_colors))
+
+    def cycle_lights(self, light_offset=0):
+        light_offset = light_offset % 34
         for i in range(34):
-            cur_inc_with_cycle = i + (self.cycle_increment % 34)
-            if cur_inc_with_cycle > 33:
-                if i < 16:
-                    self.led_strips[0][i] = self.incremental_colors[cur_inc_with_cycle - 34]
+            if light_offset + i > 33:
+                # print("\nlight_offset > 33")
+                if i <= 16:
+                    cur_led = abs(i - 16)
+                    self.led_strips[0][cur_led] = self.incremental_colors[(light_offset + i) - 34]
                 else:
-                    self.led_strips[1][i - 17] = self.incremental_colors[cur_inc_with_cycle - 34]
+                    self.led_strips[1][i - 17] = self.incremental_colors[(light_offset + i) - 34]
             else:
-                if i < 16:
-                    self.led_strips[0][i] = self.incremental_colors[cur_inc_with_cycle]
+                # print("\nlight_offset < 33")
+                if i <= 16:
+                    cur_led = abs(i - 16)
+                    self.led_strips[0][cur_led] = self.incremental_colors[light_offset + i]
+                    # print("strip 0")
+                    # print("i = {}, cur_led = {}, incremental_color = {}\n".format(i, cur_led, self.incremental_colors[light_offset]))
                 else:
-                    self.led_strips[1][i - 17] = self.incremental_colors[cur_inc_with_cycle]
+                    self.led_strips[1][i - 17] = self.incremental_colors[light_offset + i]
+                    # print("strip 1")
+                    # print("i = {}, cur_led = {}, incremental_color = {}\n".format(i, i - 17, self.incremental_colors[light_offset]))
 
         for strip in self.led_strips:
             strip.write()
-        
-        self.cycle_increment += 1
 
 
-
-# class ColorFade:
-#     def __init__(self):
-
-# current_cycle = SideToSide([led_strip, led_strip_2])
-# spiral = Spiral([led_strip, led_strip_2])
-# fade_in_half = FadeInHalf([led_strip, led_strip_2], [[255, 0, 0], [0, 0, 255]])
-# fade_along = FadeAlong([led_strip, led_strip_2])
-# side_to_side = SideToSide([led_strip, led_strip_2])
-
-# fade_in_half_check = False
-
-# cycle_options = [spiral, fade_in_half, side_to_side]
-# current_cycle = cycle_options[0]
-# cycle_inc = 0
-
-# start_time = ticks_ms()
-# while True:
-#     if ticks_ms() - start_time > 5:
-        # cycle_inc += 1
-        # current_cycle = cycle_options[cycle_inc % len(cycle_options)]
-        # start_time = ticks_ms()
-
-        # fade_along.cycle_lights()
-
-    # if cycle_inc % 3 != 1:
-    #     current_cycle.cycle_lights()
-    #     fade_in_half_check = False
-    # else:
-        # if not fade_in_half_check:
-        #     current_cycle.cycle_lights()
-        #     fade_in_half_check = True
-
-# led_strip.fill([255, 255, NUMS[200]])
-# led_strip_2.fill([255, 255, NUMS[200]])
-# led_strip.write()
-# led_strip_2.write()
+class FadeComplete:
+    def __init__(self):
+        pass

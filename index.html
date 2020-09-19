@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,52 @@
   <script src="app.js"></script>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-  <h1>Good Day Lamp Controller!</h1>
+  <nav>
+    <ul>
+      <li class="nav-dot"></li>
+      <li class="nav-dot"></li>
+      <li class="nav-dot"></li>
+    </ul>
+  </nav>
+  <main>
+    <form class="selection-form" action="/" method="get">
+      <div class="quickselect-outer">
+        <label class="quickselect-container">
+          <input type="radio" name="quickselect" value="white" class="quickselect-option one">
+          <span class="quickselect-shown one"></span>
+        </label>
+        <label class="quickselect-container">
+          <input type="radio" name="quickselect" value="yellow" class="quickselect-option two">
+          <span class="quickselect-shown two"></span>
+        </label>
+        <label class="quickselect-container">
+          <input type="radio" name="quickselect" value="red" class="quickselect-option three">
+          <span class="quickselect-shown three"></span>
+        </label>
+        <label class="quickselect-container">
+          <input type="radio" name="quickselect" value="blue" class="quickselect-option four">
+          <span class="quickselect-shown four"></span>
+        </label>
+        <label class="quickselect-container">
+          <input type="radio" name="quickselect" value="green" class="quickselect-option five">
+          <span class="quickselect-shown five"></span>
+        </label>
+        <label class="quickselect-container">
+          <input type="radio" name="quickselect" value="purple" class="quickselect-option six">
+          <span class="quickselect-shown six"></span>
+        </label>
+      </div>
+
+      <label class="slider-container">
+        <input type="range" name="brightness" id="brightness" value="100" step="1">
+        Brightness
+      </label>
+      
+      <input class="submit" type="submit" value="Set Lights!">
+    </form>
+  </main>
 </body>
+
 </html>
